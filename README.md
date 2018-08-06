@@ -1,4 +1,4 @@
-# GyroscopeMotion
+## GyroscopeMotion
 
 GyroscopeMotion is library that allows to use simple and user-friendly DSL syntax to move your Android Views with Gyroscope. You can apply force multiplier, and configure barriers (maximum DP that view should be moved). 
 
@@ -92,5 +92,5 @@ Negative values will block left(X-axis)/top(Y-axis).
 This means, that in example number 1 views can be moved 22 DP to right, 30 DP to left, 8 DP to bottom and 2DP to top.
 
 
-<b>If you found error or you think that library could be upgraded in any fashion, please created right issue. </b>
+<b>If you found error or you think that library could be upgraded in any fashion, please create right issue. </b>
   
