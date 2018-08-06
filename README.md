@@ -5,7 +5,7 @@ GyroscopeMotion is library that allows to use simple and user-friendly DSL synta
 
 ## Usage
 
-1. Single configuration - you can configure shared barriers and force multiplier for any amount of views:
+1. <b>Single configuration</b> - you can configure shared barriers and force multiplier for any amount of views:
 
 ```
    moveWithGyroscope(card2, card3) {
@@ -24,7 +24,7 @@ GyroscopeMotion is library that allows to use simple and user-friendly DSL synta
         }.start(Context, LifecycleOwner,samplingPeriod:Int)
 ```        
         
-2. Multi configuration - you can create many configurations for many views and start them all together (it is better idea then starting them separatyly)
+2. <b>Multi configuration</b> - you can create many configurations for many views and start them all together (it is better idea then starting them separatyly)
 ```
 val move1 =moveWithGyroscope(card2, card3) {
 
