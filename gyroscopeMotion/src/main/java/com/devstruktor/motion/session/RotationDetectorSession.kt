@@ -9,6 +9,7 @@ import com.devstruktor.motion.MoveListener
 
 class RotationDetectorSession(context: Context, lifecycleOwner: LifecycleOwner, samplingPeriod: Int,
                               private val yAngleListener: AngleListener? = null,
+                              private val xAngleListener: AngleListener? = null,
                               listener: MoveListener? = null)
     : BaseMotionDetectorSession(context, lifecycleOwner, samplingPeriod, listener) {
 
@@ -26,10 +27,17 @@ class RotationDetectorSession(context: Context, lifecycleOwner: LifecycleOwner, 
 
 
         SensorManager.getRotationMatrixFromVector(rotationMatrix, values)
+        SensorManager.getOrientation(rotationMatrix, orientation)
         if (yAngleListener != null) {
-            val v1 = SensorManager.getOrientation(rotationMatrix, orientation)[1]
+            val v1 = orientation[1]
             val v1Calc = ((Math.toDegrees(v1.toDouble()) + 90).toInt()).toFloat()
             yAngleListener.invoke(v1Calc)
+        }
+        if(xAngleListener!=null)
+        {
+            val v1 = orientation[2]
+            val v1Calc = ((Math.toDegrees(v1.toDouble()) + 90).toInt()).toFloat()
+            xAngleListener.invoke(v1Calc)
         }
 
     }

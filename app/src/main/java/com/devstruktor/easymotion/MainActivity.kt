@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
         }.start(this, this)
 
         RotationDetectorSession(this, this, SensorManager.SENSOR_DELAY_GAME, {
-            println("Angle $it")
+        },{
+            println("Angle X $it")
         })
 
     }
