@@ -4,8 +4,12 @@ import android.content.Context
 import android.hardware.SensorManager
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import com.devstruktor.motion.session.MotionDetectorSession
 
-class GyroscopeRegistration internal constructor(private val views: List<View>, val barriers: List<BarrierValue>, private val force: ForceValue) {
+class GyroscopeRegistration internal constructor(private val views: List<View>,
+                                                 val barriers: List<BarrierValue>,
+                                                 private val force: ForceValue,
+                                                 val listener: MoveListener?) {
 
 
     fun start(context: Context,
@@ -13,7 +17,7 @@ class GyroscopeRegistration internal constructor(private val views: List<View>, 
               samplingPeriod: Int = SensorManager.SENSOR_DELAY_GAME)
             : MotionSession {
 
-        return MotionDetectorSession(context, lifecycleOwner, samplingPeriod, toRegistrationRequest())
+        return MotionDetectorSession(toRegistrationRequest(), context, lifecycleOwner, samplingPeriod, listener)
     }
 
     internal fun toRegistrationRequest(): List<RegistrationRequest> {
@@ -26,11 +30,12 @@ class GyroscopeRegistration internal constructor(private val views: List<View>, 
 class GyroscopeMovement(var views: List<View>) {
 
 
-    var barriers: List<BarrierValue> = ArrayList()
-    var force: ForceValue? = null
+    private var barriers: List<BarrierValue> = ArrayList()
+    private var force: ForceValue? = null
+    private var listener: MoveListener? = null
 
     fun build(): GyroscopeRegistration {
-        return GyroscopeRegistration(views, barriers, force ?: ForceValue(1f, 1f))
+        return GyroscopeRegistration(views, barriers, force ?: ForceValue(1f, 1f), listener)
     }
 
 
@@ -40,6 +45,11 @@ class GyroscopeMovement(var views: List<View>) {
 
     fun applyForce(block: Force.() -> Unit) {
         force = Force().apply(block).build()
+    }
+
+    fun moveListener(listener: MoveListener) {
+        this.listener = listener
+
     }
 
 
@@ -55,10 +65,11 @@ fun moveWithGyroscope(vararg view: View, block: GyroscopeMovement.() -> Unit): G
 
 fun startMovingWithGyroscope(context: Context,
                              lifecycleOwner: LifecycleOwner,
-                             vararg registration: GyroscopeRegistration, samplingPeriod: Int = SensorManager.SENSOR_DELAY_GAME ): MotionDetectorSession {
+                             vararg registration: GyroscopeRegistration, samplingPeriod: Int = SensorManager.SENSOR_DELAY_GAME): MotionDetectorSession {
 
     val requests = registration.flatMap { it.toRegistrationRequest() }
-    return MotionDetectorSession(context, lifecycleOwner, samplingPeriod, requests)
+    val mergedListener = mergeMoveListeners(registration.map { it.listener })
+    return MotionDetectorSession(requests, context, lifecycleOwner, samplingPeriod, mergedListener)
 }
 
 
